@@ -9,7 +9,7 @@ int C = 10;
 int D = 11;
 
 int c;                  // Un contador de pasos
-int j;                  // un contador de fase
+int f;                  // un contador de fase
 
 int Paso [4][4]=        // matriz de estados paso simple
 {
@@ -238,4 +238,29 @@ for (int i=0; i<=67; i++)           // Un ciclo de paso suave
     Serial.println(i);
     delay(20);
     }
+    
+ while ( int i=0; i<100; i++ ) { Pas(); }
+ while ( int i=0; i<100; i++ ) { paS(); }
 }
+
+void Pas ()
+  {
+  if ( f > 7 ) { f = 0; }
+  digitalWrite(A, mPaso[f][0]);
+  digitalWrite(B, mPaso[f][1]);
+  digitalWrite(C, mPaso[f][2]);
+  digitalWrite(D, mPaso[f][3]);
+  delay(10);
+  j++;
+  }
+
+void paS ()
+  {
+  if ( f < 0 ) { f = 7; }
+  digitalWrite(A, mPaso[f][0]);
+  digitalWrite(B, mPaso[f][1]);
+  digitalWrite(C, mPaso[f][2]);
+  digitalWrite(D, mPaso[f][3]);
+  delay(20);
+  i--;
+  }
