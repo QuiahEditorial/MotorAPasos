@@ -2,6 +2,7 @@
 // Breve : https://es.overleaf.com/read/ypbswnmywdcn
 // Libro : https://www.amazon.com.mx/dp/B074TTGLL2
 // 🙏🏼   : DNv7acPAeVBhTXbKv26itJecPG1SPy2o4F
+// https://docs.google.com/spreadsheets/d/1v66FqD7zOg-H4kmhq8ojUr9T9_6hwO1IgihTE_KEoy4/edit?usp=sharing
 
 int A = 6;              // puertos PWM                         
 int B = 9;
