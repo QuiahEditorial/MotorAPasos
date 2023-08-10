@@ -11,6 +11,8 @@ int D = 11;
 
 int  c;                 // Un contador de pasos
 int  f;                 // un contador de fase
+int  j;
+int  i;
 bool Dir;               // Dirección
 
 int Paso [4][4]=        // matriz de estados paso simple
