@@ -189,6 +189,41 @@ int Suave [145][4]=     // matriz de estados paso suave
 { 255.0 , 0.0 , 0.0 , 0.0 } 
 };
 
+int minipaso[31]=       // Matriz de estado simplificada paso suave
+{
+ 255 ,
+ 255 ,
+ 254 ,
+ 252 ,
+ 249 ,
+ 246 ,
+ 243 ,
+ 238 ,
+ 233 ,
+ 227 ,
+ 221 ,
+ 214 ,
+ 206 ,
+ 198 ,
+ 190 ,
+ 180 ,
+ 171 ,
+ 160 ,
+ 150 ,
+ 139 ,
+ 128 ,
+ 116 ,
+ 104 ,
+ 91  ,
+ 79  ,
+ 66  ,
+ 53  ,
+ 40  ,
+ 27  ,
+ 13  ,
+ 0
+};
+
 void setup()
 {
 Serial.begin(9600);
@@ -242,6 +277,9 @@ for (int i=0; i<=67; i++)           // Un ciclo de paso suave
     
  while ( int i=0; i<100; i++ ) { Pas(); }
  while ( int i=0; i<100; i++ ) { paS(); }
+
+Dir=1;  for (int i=0; i<=119; i++) { pas(); }          // Un ciclo de paso suave con matriz simplificada
+Dir=0   for (int i=0; i<=119; i++) { pas(); }
 }
 
 void Pas ()
@@ -265,3 +303,40 @@ void paS ()
   delay(20);
   i--;
   }
+
+void pas ()  // ======================================================================================= PASOS
+{
+if ( i > 119 ) { i = 0; } if ( i < 0 ) { i = 119; }
+if (i>89)
+   {
+   j = i-90; //Serial.print(i); Serial.print("\t"); Serial.println(j);
+   analogWrite(A, Suave[30-j]);
+   analogWrite(B, 0);
+   analogWrite(C, 0);
+   analogWrite(D, Suave[j]);
+   }
+else if ( i>59 )
+  {
+  j = i-60; //Serial.print(i); Serial.print("\t"); Serial.println(j);
+  analogWrite(A, 0);
+  analogWrite(B, 0);
+  analogWrite(C, Suave[j]);
+  analogWrite(D, Suave[30-j]);
+  }
+else if (i>29)
+  {
+  j = i-30; //Serial.print(i); Serial.print("\t"); Serial.println(j);
+  analogWrite(A, 0);
+  analogWrite(B, Suave[j]);
+  analogWrite(C, Suave[30-j]);
+  analogWrite(D, 0);
+  }
+else
+  {         //Serial.println(i);
+  analogWrite(A, Suave[j]);
+  analogWrite(B, Suave[30-j]);
+  analogWrite(C, 0);
+  analogWrite(D, 0);
+  }
+  delay(20);
+}
