@@ -9,8 +9,9 @@ int B = 9;
 int C = 10;
 int D = 11;
 
-int c;                  // Un contador de pasos
-int f;                  // un contador de fase
+int  c;                 // Un contador de pasos
+int  f;                 // un contador de fase
+bool Dir;               // Dirección
 
 int Paso [4][4]=        // matriz de estados paso simple
 {
@@ -275,8 +276,8 @@ for (int i=0; i<=67; i++)           // Un ciclo de paso suave
     delay(20);
     }
     
- while ( int i=0; i<100; i++ ) { Pas(); }
- while ( int i=0; i<100; i++ ) { paS(); }
+ for ( int i=0; i<100; i++ ) { Pas(); }
+ for ( int i=0; i<100; i++ ) { paS(); }
 
 Dir=1;  for (int i=0; i<=119; i++) { pas(); }          // Un ciclo de paso suave con matriz simplificada
 Dir=0   for (int i=0; i<=119; i++) { pas(); }
