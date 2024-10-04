@@ -309,35 +309,37 @@ void paS ()
 
 void pas ()  // ======================================================================================= PASOS
 {
-if ( i > 119 ) { i = 0; } if ( i < 0 ) { i = 119; }
-if (i>89)
+if (Dir==1) { La += Stp; i++; n++;} else { La -= Stp; i--; n--;}
+if ( i > 120 ) { i = 1; } if ( i < 1 ) { i = 120; }
+if (i>91)
    {
-   j = i-90; //Serial.print(i); Serial.print("\t"); Serial.println(j);
-   analogWrite(A, Suave[30-j]);
+   j = i-91;
+   analogWrite(A, Suave[31-j]);
    analogWrite(B, 0);
    analogWrite(C, 0);
    analogWrite(D, Suave[j]);
    }
-else if ( i>59 )
+else if ( i>61 )
   {
-  j = i-60; //Serial.print(i); Serial.print("\t"); Serial.println(j);
+  j = i-61;
   analogWrite(A, 0);
   analogWrite(B, 0);
   analogWrite(C, Suave[j]);
-  analogWrite(D, Suave[30-j]);
+  analogWrite(D, Suave[31-j]);
   }
-else if (i>29)
+else if (i>31)
   {
-  j = i-30; //Serial.print(i); Serial.print("\t"); Serial.println(j);
+  j = i-31;
   analogWrite(A, 0);
   analogWrite(B, Suave[j]);
-  analogWrite(C, Suave[30-j]);
+  analogWrite(C, Suave[31-j]);
   analogWrite(D, 0);
   }
 else
-  {         //Serial.println(i);
+  {
+  j=i-1;
   analogWrite(A, Suave[j]);
-  analogWrite(B, Suave[30-j]);
+  analogWrite(B, Suave[31-j]);
   analogWrite(C, 0);
   analogWrite(D, 0);
   }
