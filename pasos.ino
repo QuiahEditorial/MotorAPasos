@@ -1,21 +1,18 @@
 // Por Roberto A.Zavala
+// 🙏🏼 DogeCoin : DNv7acPAeVBhTXbKv26itJecPG1SPy2o4F
 // Breve : https://es.overleaf.com/read/ypbswnmywdcn
 // Libro : https://www.amazon.com.mx/dp/B074TTGLL2
-// 🙏🏼   : DNv7acPAeVBhTXbKv26itJecPG1SPy2o4F
 // https://docs.google.com/spreadsheets/d/1v66FqD7zOg-H4kmhq8ojUr9T9_6hwO1IgihTE_KEoy4/edit?usp=sharing
 
-int A = 6;              // puertos PWM                         
-int B = 9;
-int C = 10;
-int D = 11;
+int A = 3;              // puertos PWM                         
+int B = 6;
+int C = 9;
+int D = 10;
 
-int  c;                 // Un contador de pasos
-int  f;                 // un contador de fase
-int  j;
+int  j;                 // Contadores
 int  i;
-bool Dir;               // Dirección
 
-int Paso [4][4]=        // matriz de estados paso simple
+int paso [4][4]=        // matriz de estados paso simple
 {
 {1,0,0,0},
 {0,1,0,0},
@@ -23,7 +20,7 @@ int Paso [4][4]=        // matriz de estados paso simple
 {0,0,0,1},
 };
 
-int mPaso [8][4]=       // matriz de estados medio paso
+int mpas [8][4]=        // matriz de estados medio paso
 {
 {1,0,0,0},
 {1,1,0,0},
@@ -35,7 +32,7 @@ int mPaso [8][4]=       // matriz de estados medio paso
 {1,0,0,1}
 };
 
-int tPaso [8][4]=       // matriz de estados alto torque
+int tpas [8][4]=        // matriz de estados alto torque
 {
 {1,1,0,0},
 {0,1,1,0},
@@ -43,7 +40,7 @@ int tPaso [8][4]=       // matriz de estados alto torque
 {1,0,0,1}
 };
 
-int Suave [145][4]=     // matriz de estados paso suave
+int suav [145][4]=      // matriz de estados paso suave Arduino ignora el decimal
 {
 { 255.0 , 0.0 , 0.0 , 0 } ,
 { 254.8 , 11.1  , 0.0 , 0 } ,
@@ -192,7 +189,7 @@ int Suave [145][4]=     // matriz de estados paso suave
 { 255.0 , 0.0 , 0.0 , 0.0 } 
 };
 
-int minipaso[31]=       // Matriz de estado simplificada paso suave
+int vect[31]=           // Matriz de estado simplificada paso suave
 {
  255 ,
  255 ,
@@ -227,6 +224,11 @@ int minipaso[31]=       // Matriz de estado simplificada paso suave
  0
 };
 
+int P[4][2] = { {D , A },   // Puertos PWM
+                {A , B },
+                {B , C },
+                {C , D } };
+
 void setup()
 {
 Serial.begin(9600);
@@ -238,110 +240,70 @@ pinMode(D,OUTPUT);
 
 void loop()
 {
-for (int i=0; i<=3; i++)           // Un ciclo de paso simple
-    {
-    digitalWrite(A, Paso[i][0]);
-    digitalWrite(B, Paso[i][1]);
-    digitalWrite(C, Paso[i][2]);
-    digitalWrite(D, Paso[i][3]);
-    Serial.println(i);
-    delay(500);
-    }
-
-for (int i=0; i<=7; i++)           // Un ciclo de medio paso
-    {
-    digitalWrite(A, mPaso[i][0]);
-    digitalWrite(B, mPaso[i][1]);
-    digitalWrite(C, mPaso[i][2]);
-    digitalWrite(D, mPaso[i][3]);
-    Serial.println(i);
-    delay(500);
-    }
-    
-for (int i=0; i<=3; i++)           // Un ciclo de alto torque
-    {
-    digitalWrite(A, tPaso[i][0]);
-    digitalWrite(B, tPaso[i][1]);
-    digitalWrite(C, tPaso[i][2]);
-    digitalWrite(D, tPaso[i][3]);
-    Serial.println(i);
-    delay(500);
-    }
-
-for (int i=0; i<=67; i++)           // Un ciclo de paso suave
-    {
-    analogWrite(A, Suave[i][0]);
-    analogWrite(B, Suave[i][1]);
-    analogWrite(C, Suave[i][2]);
-    analogWrite(D, Suave[i][3]);
-    Serial.println(i);
-    delay(20);
-    }
-    
- for ( int i=0; i<100; i++ ) { Pas(); }
- for ( int i=0; i<100; i++ ) { paS(); }
-
-Dir=1;  for (int i=0; i<=119; i++) { pas(); }          // Un ciclo de paso suave con matriz simplificada
-Dir=0   for (int i=0; i<=119; i++) { pas(); }
+Paso(); delay(1000);
+mPas(); delay(1000);
+tPas(); delay(1000);
+Suav(); delay(1000);
+Vect(); delay(1000);
 }
 
-void Pas ()
-  {
-  if ( f > 7 ) { f = 0; }
-  digitalWrite(A, mPaso[f][0]);
-  digitalWrite(B, mPaso[f][1]);
-  digitalWrite(C, mPaso[f][2]);
-  digitalWrite(D, mPaso[f][3]);
-  delay(10);
-  j++;
-  }
-
-void paS ()
-  {
-  if ( f < 0 ) { f = 7; }
-  digitalWrite(A, mPaso[f][0]);
-  digitalWrite(B, mPaso[f][1]);
-  digitalWrite(C, mPaso[f][2]);
-  digitalWrite(D, mPaso[f][3]);
-  delay(20);
-  i--;
-  }
-
-void pas ()  // ======================================================================================= PASOS
+void Paso()
 {
-if (Dir==1) { La += Stp; i++; n++;} else { La -= Stp; i--; n--;}
-if ( i > 120 ) { i = 1; } if ( i < 1 ) { i = 120; }
-if (i>91)
-   {
-   j = i-91;
-   analogWrite(A, Suave[31-j]);
-   analogWrite(B, 0);
-   analogWrite(C, 0);
-   analogWrite(D, Suave[j]);
-   }
-else if ( i>61 )
+for (int i=0; i<=3; i++)           // Un ciclo de paso simple
+    {
+    digitalWrite(A, paso[i][0]);
+    digitalWrite(B, paso[i][1]);
+    digitalWrite(C, paso[i][2]);
+    digitalWrite(D, paso[i][3]);
+    delay(500);
+    }
+}
+
+void mPas()
+{
+ for (int i=0; i<=7; i++)           // Un ciclo de medio paso
+    {
+    digitalWrite(A, mpas[i][0]);
+    digitalWrite(B, mpas[i][1]);
+    digitalWrite(C, mpas[i][2]);
+    digitalWrite(D, mpas[i][3]);
+    delay(500);
+    }
+}
+
+void tPas()
+{
+for (int i=0; i<=3; i++)           // Un ciclo de alto torque
+    {
+    digitalWrite(A, tpas[i][0]);
+    digitalWrite(B, tpas[i][1]);
+    digitalWrite(C, tpas[i][2]);
+    digitalWrite(D, tpas[i][3]);
+    delay(500);
+    }
+}
+
+void Suav()
+{
+for (int i=0; i<=67; i++)           // Un ciclo de paso suave
+    {
+    analogWrite(A, suav[i][0]);
+    analogWrite(B, suav[i][1]);
+    analogWrite(C, suav[i][2]);
+    analogWrite(D, suav[i][3]);
+    delay(50);
+    }
+}
+
+void Vect()                         // Un cliclo de paso suave
+{
+for ( i=0; i<=3; i++)
+{
+  for ( j=0; j<=30; j++ )
   {
-  j = i-61;
-  analogWrite(A, 0);
-  analogWrite(B, 0);
-  analogWrite(C, Suave[j]);
-  analogWrite(D, Suave[31-j]);
+  analogWrite(P[i][0], Suave[30-j]);
+  analogWrite(P[i][1], Suave[j]);
+  delay(500);
   }
-else if (i>31)
-  {
-  j = i-31;
-  analogWrite(A, 0);
-  analogWrite(B, Suave[j]);
-  analogWrite(C, Suave[31-j]);
-  analogWrite(D, 0);
-  }
-else
-  {
-  j=i-1;
-  analogWrite(A, Suave[j]);
-  analogWrite(B, Suave[31-j]);
-  analogWrite(C, 0);
-  analogWrite(D, 0);
-  }
-  delay(20);
+}
 }
