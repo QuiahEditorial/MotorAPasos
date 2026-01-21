@@ -301,8 +301,8 @@ for ( i=0; i<=3; i++)
 {
   for ( j=0; j<=30; j++ )
   {
-  analogWrite(P[i][0], Suave[30-j]);
-  analogWrite(P[i][1], Suave[j]);
+  analogWrite( P[i][0], vect[ 30-j ] );
+  analogWrite( P[i][1], vect[ j ]    );
   delay(500);
   }
 }
